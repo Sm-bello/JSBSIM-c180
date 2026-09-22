@@ -1,3 +1,6 @@
+<img width="1536" height="1024" alt="ChatGPT Image Sep 22, 2026, 09_34_07 AM" src="https://github.com/user-attachments/assets/d7563b82-43c3-4bd3-850e-07258706fab1" />
+
+
 # PHI-SPIKE — Cessna 182
 
 ## What this is
