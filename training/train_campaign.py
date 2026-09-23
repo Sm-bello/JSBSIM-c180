@@ -253,6 +253,7 @@ def _train_one_inner(
                 continue
 
             loss.backward()
+            torch.nn.utils.clip_grad_value_(model.parameters(), 5.0)
             grad_norm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
             if not torch.isfinite(grad_norm):
                 nan_skipped += 1

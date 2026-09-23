@@ -90,7 +90,14 @@ class LIFLayer(nn.Module):
 
         for t in range(T):
             i_syn = beta * i_syn + self.fc(x_seq[t])
+            # Clamp synaptic current and membrane potential every step --
+            # verified necessary at full training scale: gradient-norm
+            # clipping alone does not stop v/i_syn from compounding to
+            # overflow over many thousands of batches. See
+            # CHANGES_c182_lif_fix.md for the full verification evidence.
+            i_syn = torch.clamp(i_syn, -50.0, 50.0)
             v = alpha * v + i_syn
+            v = torch.clamp(v, -50.0, 50.0)
             s = spike_fn(v, self.v_th)
             v = v * (1.0 - s)  # soft reset
             spikes.append(s)

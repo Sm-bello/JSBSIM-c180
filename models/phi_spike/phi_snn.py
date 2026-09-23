@@ -87,9 +87,10 @@ class PhysicsConditionedLIF(nn.Module):
 
         for t in range(T):
             i_syn = beta * i_syn + self.fc(x_seq[t])
+            i_syn = torch.clamp(i_syn, -50.0, 50.0)
             phys = 0.0
             if residual_seq is not None:
-                r_t = residual_seq[t]
+                r_t = torch.clamp(residual_seq[t], -50.0, 50.0)
                 r_proj = self.residual_proj(r_t)
                 if self.learnable_gate:
                     gate_in = torch.cat([i_syn.detach(), r_t], dim=-1)
@@ -98,6 +99,7 @@ class PhysicsConditionedLIF(nn.Module):
                 else:
                     phys = self.alpha_physics * r_proj
             v = alpha * v + i_syn + phys
+            v = torch.clamp(v, -50.0, 50.0)
             s = spike_fn(v, self.v_th)
             v = v * (1.0 - s)
             spikes.append(s)
